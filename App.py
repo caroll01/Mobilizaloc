@@ -7,7 +7,7 @@ from streamlit_folium import st_folium
 
 st.set_page_config(page_title="MobilizaLoc", page_icon="🚀", layout="wide")
 
-# ==================== DADOS DOS MEMBROS (com foto e nome completo) ====================
+# Dados dos membros
 if "locations" not in st.session_state:
     st.session_state.locations = {
         "qualificado": {
@@ -15,7 +15,7 @@ if "locations" not in st.session_state:
             "lat": 38.7223, "lon": -9.1393,
             "status": "Em espera",
             "last_update": datetime.now().strftime("%H:%M"),
-            "foto": "https://picsum.photos/id/1015/300/300"   # foto de demonstração
+            "foto": "https://picsum.photos/id/1015/300/300"
         },
         "membro1": {
             "nome": "João Silva",
@@ -46,7 +46,7 @@ if "current_user" not in st.session_state:
 if "full_access" not in st.session_state:
     st.session_state.full_access = False
 
-# ==================== LOGIN ====================
+# LOGIN
 if st.session_state.current_user is None:
     st.title("🚀 MobilizaLoc")
     st.subheader("Sistema de Localização de Equipa")
@@ -60,7 +60,7 @@ if st.session_state.current_user is None:
             st.success(f"Bem-vindo, {username}!")
             st.rerun()
         else:
-            st.error("Password errada. Usa **1234**")
+            st.error("Password errada. Usa 1234")
 
 else:
     user = st.session_state.current_user
@@ -71,7 +71,7 @@ else:
         st.session_state.full_access = False
         st.rerun()
 
-    # ==================== PÁGINA PESSOAL ====================
+    # Página pessoal
     loc = st.session_state.locations[user]
 
     st.subheader("📍 A tua localização")
@@ -91,12 +91,12 @@ else:
     df_personal = pd.DataFrame([{"lat": loc["lat"], "lon": loc["lon"]}])
     st.map(df_personal, zoom=12, use_container_width=True)
 
-    # ==================== MAPA GLOBAL PARA QUALIFICADOS ====================
+    # Mapa Global para Qualificados
     if user == "qualificado":
-       st.divider()
+        st.divider()
         st.subheader("🔐 Mapa Global - Clique nos pontos para ver detalhes")
 
-        code = st.text_input("Código específico", typ e="password", placeholder="MOBILIZA2026")
+        code = st.text_input("Código específico", type="password", placeholder="MOBILIZA2026")
 
         if st.button("Validar código"):
             if code == "MOBILIZA2026":
@@ -107,4 +107,9 @@ else:
                 st.error("Código incorreto")
 
         if st.session_state.full_access:
-            # Cria o mapa interativo com Folium
+            m = folium.Map(location=[39.5, -8.0], zoom_start=7)
+
+            for nome_user, info in st.session_state.locations.items():
+                popup_html = f"""
+                <div style="width:250px">
+                    <img src="{info['foto']}" width="100%" style="bo
