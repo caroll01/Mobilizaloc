@@ -110,6 +110,30 @@ else:
             m = folium.Map(location=[39.5, -8.0], zoom_start=7)
 
             for nome_user, info in st.session_state.locations.items():
-                popup_html = f"""
-                <div style="width:250px">
-                    <img src="{info['foto']}" width="100%" style="bo
+                folium.Marker(
+                    location=[info["lat"], info["lon"]],
+                    popup=f"""
+                    <h4>{info['nome']}</h4>
+                    <img src="{info['foto']}" width="200" style="border-radius:8px"><br><br>
+                    <b>Estado:</b> {info['status']}<br>
+                    <b>Atualizado:</b> {info['last_update']}<br>
+                    <b>Coordenadas:</b> {info['lat']:.4f}, {info['lon']:.4f}
+                    """,
+                    tooltip=info["nome"],
+                    icon=folium.Icon(color="red" if "Mobilizado" in info["status"] else "blue")
+                ).add_to(m)
+
+            st_folium(m, width=700, height=500, use_container_width=True)
+
+            # Lista simples
+            st.subheader("Lista de todos os membros")
+            data = []
+            for info in st.session_state.locations.values():
+                data.append({
+                    "Membro": info["nome"],
+                    "Estado": info["status"],
+                    "Atualizado": info["last_update"]
+                })
+            st.dataframe(pd.DataFrame(data), use_container_width=True, hide_index=True)
+
+st.caption("MobilizaLoc • Mapa clicável com fotos")
