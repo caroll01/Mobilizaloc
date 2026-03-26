@@ -98,3 +98,4 @@ else:
             for u, loc in st.session_state.locations.items():
                 data.append({
                     "Elemento": u,
+                    Corrigido syntax error
