@@ -5,8 +5,8 @@ from datetime import datetime
 
 st.set_page_config(page_title="MobilizaLoc", page_icon="🚀", layout="wide")
 
-# Dados iniciais
-if 'locations' not in st.session_state:
+# ==================== DADOS INICIAIS ====================
+if "locations" not in st.session_state:
     st.session_state.locations = {
         "qualificado": {"lat": 38.7223, "lon": -9.1393, "status": "Em espera", "last_update": datetime.now().strftime("%H:%M")},
         "membro1": {"lat": 41.1579, "lon": -8.6291, "status": "Em espera", "last_update": datetime.now().strftime("%H:%M")},
@@ -14,16 +14,16 @@ if 'locations' not in st.session_state:
         "membro3": {"lat": 40.2033, "lon": -8.4103, "status": "Em espera", "last_update": datetime.now().strftime("%H:%M")},
     }
 
-if 'qualified_users' not in st.session_state:
+if "qualified_users" not in st.session_state:
     st.session_state.qualified_users = ["qualificado"]
 
-if 'current_user' not in st.session_state:
+if "current_user" not in st.session_state:
     st.session_state.current_user = None
 
-if 'full_access' not in st.session_state:
+if "full_access" not in st.session_state:
     st.session_state.full_access = False
 
-# Tela de login
+# ==================== LOGIN ====================
 if st.session_state.current_user is None:
     st.title("🚀 MobilizaLoc")
     st.subheader("Sistema de Localização e Mobilização de Equipa")
@@ -40,7 +40,7 @@ if st.session_state.current_user is None:
             st.success(f"Bem-vindo, {username}!")
             st.rerun()
         else:
-            st.error("Credenciais erradas. Password de demonstração: **1234**")
+            st.error("Credenciais erradas. Password de demonstração: 1234")
 
 else:
     user = st.session_state.current_user
@@ -59,9 +59,9 @@ else:
     with col1:
         st.metric("Localização atual", f"{my_loc['lat']:.4f}, {my_loc['lon']:.4f}")
     with col2:
-        st.metric("Status", my_loc['status'])
+        st.metric("Status", my_loc["status"])
     with col3:
-        st.metric("Atualizado", my_loc['last_update'])
+        st.metric("Atualizado", my_loc["last_update"])
 
     if st.button("📡 Mobilizar-me", type="primary", use_container_width=True):
         st.session_state.locations[user]["status"] = "Mobilizado ✅"
@@ -73,7 +73,7 @@ else:
 
     st.subheader("🗺️ Onde estás agora")
     df_personal = pd.DataFrame([{"lat": my_loc["lat"], "lon": my_loc["lon"], "name": user}])
-    st.map(df_personal, use_container_width=True, zoom=12)
+    st.map(df_personal, use_container_width=True)
 
     # Acesso qualificado
     if user in st.session_state.qualified_users:
@@ -98,4 +98,3 @@ else:
             for u, loc in st.session_state.locations.items():
                 data.append({
                     "Elemento": u,
-                    "Latitude": loc["lat"],
